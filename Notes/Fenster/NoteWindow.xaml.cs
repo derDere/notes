@@ -458,7 +458,7 @@ namespace Notes {
     }
 
     private void SyncCmd_Executed(object sender, ExecutedRoutedEventArgs e) {
-      if (NoteConfig.File != null) {
+      if (!string.IsNullOrEmpty(NoteConfig.File)) {
         IO.FileInfo fi = new IO.FileInfo(NoteConfig.File);
         SyncFileDialog.InitialDirectory = fi.Directory.FullName;
         SyncFileDialog.FileName = fi.Name;
