@@ -1,0 +1,91 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    border: 0 none;
+    overflow: auto;
+    background: PaleGoldenrod;
+    color: MediumSlateBlue;
+    font-family: DejaVuSansMono Nerd Font;
+    font-size: 12px;
+}
+
+body {
+    margin-left: 1px;
+}
+
+.editor-color {
+    white-space: pre-line;
+    background: rgba(0,0,0,0.1) !important;
+}
+
+hr {
+    border: 0 none;
+    background: MediumSlateBlue;
+    height: 1px;
+    margin: 10px 0;
+}
+
+::-webkit-scrollbar {
+    width: 5px; /* Set the width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar handle */
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; /* Color of the scrollbar handle on hover */
+    }
+
+a {
+    color: CornflowerBlue;
+}
+
+nav ul {
+    padding-inline-start: 15px;
+}
+
+nav li a {
+    text-decoration: none;
+    color: MediumSlateBlue;
+}
+
+    nav li a:hover {
+        text-decoration: underline;
+        color: CornflowerBlue;
+    }
+
+table {
+    margin: 10px;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+
+table thead {
+    margin: 0 0 1px 0;
+}
+
+    table th,
+    table td {
+        padding: 5px 10px;
+        border: 1px solid CornflowerBlue;
+        border-right: 0 none;
+        border-bottom: 0 none;
+    }
+
+        table th {
+            background: rgba(0,0,0,0.1);
+        }
+
+        table th:last-child,
+        table td:last-child {
+            border-right: 1px solid CornflowerBlue;
+        }
+
+    table tr:last-child td {
+        border-bottom: 1px solid CornflowerBlue;
+    }
+
+    table tr:last-child th {
+        border-bottom: 2px solid CornflowerBlue;
+    }

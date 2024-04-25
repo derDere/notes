@@ -1,0 +1,44 @@
+﻿<Window x:Class="Notes.MainWindow" x:Name="Win"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Notes"
+        xmlns:c="clr-namespace:Notes.Controls"
+        mc:Ignorable="d" WindowState="Minimized"
+        DataContext="{Binding ElementName=Win, Path=Notes}"
+        Loaded="Win_Loaded" Background="{StaticResource BgBru}"
+        Title="Notes" Height="400" Width="350" Icon="/Note.ico" WindowStartupLocation="CenterScreen">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo>
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfoCollection>
+                    <ThumbButtonInfo Click="NewNoteTBtn_Click" ImageSource="/Resources/sticky_note__plus.png"/>
+                </ThumbButtonInfoCollection>
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Button Click="NewNoteTBtn_Click" Padding="0 5" Foreground="{StaticResource FgBru}" Background="{StaticResource TitleBgBru}" BorderThickness="0" FontFamily="DejaVuSansMono Nerd Font"> Add new Note</Button>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl x:Name="ItemsCon" DataContext="{Binding}" ItemsSource="{Binding}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="local:Config.NoteConfig">
+                        <c:NoteLineItem DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>

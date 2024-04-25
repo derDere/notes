@@ -1,0 +1,122 @@
+﻿<Window xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  x:Class="Notes.NoteWindow" x:Name="Win"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Notes"
+        mc:Ignorable="d"
+        Foreground="{StaticResource FgBru}" Background="{x:Null}"
+        Title="Note" Icon="/Note.ico"
+        SizeToContent="WidthAndHeight"
+        Activated="Win_Activated"
+        Deactivated="Win_Deactivated"
+        LocationChanged="Win_LocationChanged"
+        SizeChanged="Win_SizeChanged"
+        DataContext="{Binding ElementName=Win, Path=NoteConfig}"
+        WindowStyle="None" ShowInTaskbar="False" AllowsTransparency="True"
+        MouseDown="Win_MouseDown" PreviewMouseDown="Win_MouseDown">
+    <Window.ContextMenu>
+        <ContextMenu x:Name="WinConMen" Closed="WinConMen_Closed">
+            <MenuItem Command="SelectAll" Icon="{StaticResource SelectAllIco}"/>
+            <Separator/>
+            <MenuItem Command="Cut" Icon="{StaticResource CutIco}"/>
+            <MenuItem Command="Copy" Icon="{StaticResource CopyIco}"/>
+            <MenuItem Command="Paste" Icon="{StaticResource PasteIco}"/>
+            <Separator/>
+            <MenuItem Command="Undo" Icon="{StaticResource UndoIco}"/>
+            <MenuItem Command="Redo" Icon="{StaticResource RedoIco}"/>
+            <Separator/>
+            <MenuItem Command="local:CustomCommands.Shuffle" Header="Mischen" Icon="{StaticResource ShuffleIco}"/>
+            <MenuItem x:Name="ContentTypeMi" Header="Content Type">
+                <MenuItem Tag="{x:Static local:DisplayTypes.Plain}" Icon="{StaticResource PlainTextIco}" Header="Plain Text" IsChecked="True" IsCheckable="True" Checked="ContentTypeMi_Checked"/>
+                <MenuItem Tag="{x:Static local:DisplayTypes.MarkDown}" Icon="{StaticResource MarkDownIco}" Header="MarkDown" IsCheckable="True" Checked="ContentTypeMi_Checked"/>
+                <MenuItem Tag="{x:Static local:DisplayTypes.Org}" Icon="{StaticResource OrgIco}" Header="Org Code" IsEnabled="False"/>
+                <MenuItem Tag="{x:Static local:DisplayTypes.Custom}" Icon="{StaticResource CustomIco}" Header="Custom" IsCheckable="True" Checked="ContentTypeMi_Checked"/>
+            </MenuItem>
+            <MenuItem Command="Print" Icon="{StaticResource PrintIco}"/>
+            <MenuItem Header="Sync to Document" Command="local:CustomCommands.SyncToDocument" Icon="{StaticResource SaveToDocIco}"/>
+            <MenuItem x:Name="StopSyncMi" Header="Stop Sync" Command="local:CustomCommands.StopSyncToDocument"/>
+            <MenuItem Header="Reload" Command="local:CustomCommands.Reload" Icon="{StaticResource ReloadIco}"/>
+            <Separator/>
+            <MenuItem Command="Close" Icon="{StaticResource CloseIco}"/>
+            <ContextMenu.CommandBindings>
+                <CommandBinding Command="Copy" CanExecute="CopyCmd_CanExecute" Executed="CopyCmd_Executed"/>
+                <CommandBinding Command="Close" CanExecute="Cmd_CanAlwaysExecute" Executed="CloseCmd_Executed" />
+                <CommandBinding Command="SelectAll" CanExecute="SelectAllCmd_CanExecute" Executed="SelectAllCmd_Executed"/>
+                <CommandBinding Command="Print" CanExecute="PrintCmd_CanExecute" Executed="PrintCmd_Executed"/>
+                <CommandBinding Command="local:CustomCommands.Shuffle" CanExecute="Cmd_CanAlwaysExecute" Executed="ShuffleCmd_Executed"/>
+                <CommandBinding Command="local:CustomCommands.SyncToDocument" CanExecute="Cmd_CanAlwaysExecute" Executed="SyncCmd_Executed"/>
+                <CommandBinding Command="local:CustomCommands.StopSyncToDocument" CanExecute="Cmd_CanAlwaysExecute" Executed="StopSyncCmd_Executed"/>
+                <CommandBinding Command="local:CustomCommands.Reload" CanExecute="Cmd_CanAlwaysExecute" Executed="ReloadCmd_Executed"/>
+            </ContextMenu.CommandBindings>
+        </ContextMenu>
+    </Window.ContextMenu>
+    <Grid Margin="20" Background="{StaticResource BgBru}">
+        <Grid.Effect>
+            <DropShadowEffect ShadowDepth="0" BlurRadius="8" Opacity=".5"/>
+        </Grid.Effect>
+
+        <TextBox x:Name="ContentTxb" Width="200" Height="200"
+                 IsReadOnly="True" Cursor="Arrow"
+                 TextChanged="ContentTxb_TextChanged"
+                 BorderThickness="0" Margin="10 15 10 10" Padding="0"
+                 ContextMenu="{Binding ElementName=Win, Path=ContextMenu}"
+                 Background="{StaticResource BgBru}" Foreground="{StaticResource FgBru}"
+                 FontFamily="DejaVuSansMono Nerd Font" FontSize="12"
+                 AcceptsReturn="True" AcceptsTab="True" AutoWordSelection="False"
+                 HorizontalScrollBarVisibility="Auto"
+                 VerticalScrollBarVisibility="Auto"
+                 MinHeight="30" MinWidth="30" UndoLimit="1000"
+                 UseLayoutRounding="True"
+                 SelectionOpacity=".5">
+            <TextBox.Effect>
+                <BlurEffect Radius="8"/>
+            </TextBox.Effect>
+        </TextBox>
+
+        <Ellipse
+            x:Name="LoadingElli"
+            Width="20" Height="20"
+            RenderTransformOrigin=".5 .5"
+            Stroke="{StaticResource FgBru}" StrokeThickness="2"
+            StrokeDashArray="23 100" StrokeDashCap="Round">
+            <Ellipse.RenderTransform>
+                <RotateTransform Angle="0"/>
+            </Ellipse.RenderTransform>
+            <Ellipse.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle"
+                                             From="0" To="360" Duration="0:0:00.7" RepeatBehavior="1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Ellipse.Triggers>
+        </Ellipse>
+
+        <Wpf:WebView2 x:Name="WebCon"
+                      Visibility="Collapsed"
+                      NavigationCompleted="WebCon_NavigationCompleted"
+                      Width="{Binding ElementName=ContentTxb, Path=Width}"
+                      Height="{Binding ElementName=ContentTxb, Path=Height}"
+                      Margin="0 5 0 0" WebMessageReceived="WebCon_MessageReceived"
+                      DefaultBackgroundColor="#FFF2AB"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      CoreWebView2InitializationCompleted="WebCon_CoreWebView2InitializationCompleted"
+                      AllowExternalDrop="False">
+        </Wpf:WebView2>
+        <!--ContextMenu="{Binding ElementName=Win, Path=ContextMenu}"-->
+
+        <Image x:Name="PenImg" ToolTip="Click to stop EditMode" MouseDown="PenImg_MouseDown" Visibility="Collapsed" Margin="0 5 0 0" Width="16" Height="16" Source="/Resources/pencil.png" RenderOptions.BitmapScalingMode="NearestNeighbor" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+
+        <Rectangle x:Name="ResizeRect" Height="10" Width="10" Fill="Transparent" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE"
+                   MouseDown="ResizeRect_MouseDown"
+                   MouseUp="ResizeRect_MouseUp"
+                   MouseMove="ResizeRect_MouseMove"/>
+
+        <Rectangle x:Name="DragRect" Cursor="ScrollAll" VerticalAlignment="Top" Height="5" Fill="{StaticResource TitleBgBru}"
+                   MouseDown="DragRect_MouseDown"/>
+    </Grid>
+</Window>

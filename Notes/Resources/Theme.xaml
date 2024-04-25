@@ -1,0 +1,82 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="BgColor">#FFFFF2AB</Color>
+    <Color x:Key="BgColorTransparent">#00FFF2AB</Color>
+    <Color x:Key="FgColor">#F308</Color>
+    <Color x:Key="LkColor">#F05B</Color>
+    <Color x:Key="TitleBgColor">#FFFFEB81</Color>
+
+    <SolidColorBrush x:Key="BgBru" Color="{StaticResource BgColor}"/>
+    <SolidColorBrush x:Key="FgBru" Color="{StaticResource FgColor}"/>
+    <SolidColorBrush x:Key="TitleBgBru" Color="{StaticResource TitleBgColor}"/>
+
+    <Viewbox x:Key="SelectAllIco" x:Shared="false">
+        <Image Source="/Resources/selection_select.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="CutIco" x:Shared="false">
+        <Image Source="/Resources/scissors_blue.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="CopyIco" x:Shared="false">
+        <Image Source="/Resources/document_copy.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="PasteIco" x:Shared="false">
+        <Image Source="/Resources/clipboard_paste.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="UndoIco" x:Shared="false">
+        <Image Source="/Resources/arrow_return_180_left.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="RedoIco" x:Shared="false">
+        <Image Source="/Resources/arrow_return_000_left.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="ShuffleIco" x:Shared="false">
+        <Image Source="/Resources/arrow_switch.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="CloseIco" x:Shared="false">
+        <Image Source="/Resources/cross_script.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="EyeIco" x:Shared="false">
+        <Image Source="/Resources/eye.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="TrashIco" x:Shared="false">
+        <Image Source="/Resources/trash_bin.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="PlainTextIco" x:Shared="false">
+        <Image Source="/Resources/document_text.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="MarkDownIco" x:Shared="false">
+        <Image Source="/Resources/markdown_md.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="OrgIco" x:Shared="false">
+        <Image Source="/Resources/org_mode_unicorn.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="CustomIco" x:Shared="false">
+        <Image Source="/Resources/user_silhouette_question.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="PrintIco" x:Shared="false">
+        <Image Source="/Resources/printer.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="SaveToDocIco" x:Shared="false">
+        <Image Source="/Resources/document_sticky_note.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+    <Viewbox x:Key="ReloadIco" x:Shared="false">
+        <Image Source="/Resources/arrow_circle_double_135.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+    </Viewbox>
+
+</ResourceDictionary>
