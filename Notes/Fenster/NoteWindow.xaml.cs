@@ -4,6 +4,7 @@ using Microsoft.Web.WebView2.WinForms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -223,13 +224,22 @@ namespace Notes {
       }
     }
 
+    public static int WeekOfYear(DateTime t) {
+      CultureInfo ci = CultureInfo.CurrentCulture;
+      return ci.Calendar.GetWeekOfYear(t, ci.DateTimeFormat.CalendarWeekRule, ci.DateTimeFormat.FirstDayOfWeek);
+    }
+
     private void SendDateUpdate(Dictionary<string, object> jj) {
       jj["cmd"] = "updateDate";
       DateTime t = DateTime.Now;
       if ((bool)jj["utc"]) {
         t = t.ToUniversalTime();
       }
-      jj.Add("value", t.ToString((string)jj["format"]));
+      string value = t.ToString((string)jj["format"]);
+      int kw = WeekOfYear(t);
+      value = value.Replace("ww", kw.ToString());
+      value = value.Replace("WW", kw.ToString().PadLeft(2, '0'));
+      jj.Add("value", value);
       WebCon.CoreWebView2.PostWebMessageAsJson(Newtonsoft.Json.JsonConvert.SerializeObject(jj));
     }
 
