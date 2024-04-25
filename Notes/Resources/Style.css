@@ -41,9 +41,24 @@ a {
     color: CornflowerBlue;
 }
 
-nav ul {
+ul,
+ol {
     padding-inline-start: 15px;
 }
+
+    ul ul,
+    ol ol,
+    ul ol,
+    ol ul {
+        padding-inline-start: 20px;
+    }
+
+    nav ul ul,
+    nav ol ol,
+    nav ul ol,
+    nav ol ul {
+        padding-inline-start: 15px;
+    }
 
 nav li a {
     text-decoration: none;
@@ -89,3 +104,21 @@ table thead {
     table tr:last-child th {
         border-bottom: 2px solid CornflowerBlue;
     }
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    padding: 0 0 0 10px;
+    border: 0 none;
+}
+    h1 { font-size: 18px; border-left: 7px solid MediumSlateBlue; }
+    h2 { font-size: 17px; border-left: 6px solid MediumSlateBlue; }
+    h3 { font-size: 16px; border-left: 5px solid MediumSlateBlue; }
+    h4 { font-size: 15px; border-left: 4px solid MediumSlateBlue; }
+    h5 { font-size: 14px; border-left: 3px solid MediumSlateBlue; }
+    h6 { font-size: 13px; border-left: 2px solid MediumSlateBlue; }
+
+p {
+    padding: 0;
+    margin: 0 0 10px 0;
+}
