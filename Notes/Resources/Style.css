@@ -40,6 +40,19 @@ hr {
 a {
     color: CornflowerBlue;
 }
+    a.external::before {
+        content: '\FA9E   ';
+    }
+    a[target='explorer']::before {
+        content: '\F07C   ';
+    }
+    a[target='cmd']::before {
+        content: '\E795   ';
+    }
+
+a.jira::before {
+    content: '\F802   ';
+}
 
 ul,
 ol {

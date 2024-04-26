@@ -46,6 +46,13 @@ namespace Notes {
       }
     }
 
+    public static string GlobalReplacements(string s) {
+      foreach (ReplacePattern rp in Config.GlobalStylePatterns) {
+        s = rp.Replace(s);
+      }
+      return s;
+    }
+
     public static string WrapIntoHtml(string html) {
       Media.Color FgColor = (Media.Color)(Application.Current.FindResource("FgColor"));
       Media.Color BgColor = (Media.Color)(Application.Current.FindResource("BgColor"));
@@ -64,7 +71,7 @@ namespace Notes {
         "    </style>",
         "  </head>",
         "  <body>",
-        html,
+        GlobalReplacements(html),
         "    <script type=\"text/javascript\">",
         "    <!--",
         Properties.Resources.Script,

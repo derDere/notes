@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using IO = System.IO;
@@ -35,6 +36,7 @@ namespace Notes {
     public static void Save() {
       if (MySelf == null) {
         MySelf = new Config();
+        MySelf._CustomStylePatterns = DefaultCustomPatterns.ToArray().ToList();
       }
       try {
         string jj = Newtonsoft.Json.JsonConvert.SerializeObject(MySelf, Newtonsoft.Json.Formatting.Indented);
@@ -90,19 +92,28 @@ namespace Notes {
       }
     }
 
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    [Newtonsoft.Json.JsonProperty("CustomStylePatterns")]
-    private List<ReplacePattern> _CustomStylePatterns = new List<ReplacePattern>() {
+    internal readonly static List<ReplacePattern> DefaultCustomPatterns = new List<ReplacePattern>() {
+      new ReplacePattern(Regex.Escape("&"), "&#38;"),
+      new ReplacePattern(Regex.Escape("<"), "&#38;"),
+      new ReplacePattern(Regex.Escape(">"), "&#38;"),
+      new ReplacePattern(Regex.Escape(" "), "&#160;"),
+      new ReplacePattern(Regex.Escape("\t"), "&#9;"),
+      new ReplacePattern(Regex.Escape("\r\n"), "<br />"),
+      new ReplacePattern(Regex.Escape("\r"), "<br />"),
+      new ReplacePattern(Regex.Escape("\n"), "<br />"),
+      new ReplacePattern(Regex.Escape("\""), "&#34;"),
       new ReplacePattern(@"^(\s*)(\*)(\s+)", "&#160;&#x25C9;&#160;", Re.RegexOptions.IgnoreCase | Re.RegexOptions.Multiline),
       new ReplacePattern(@"^(\s*)(\*){2}(\s+)", "&#160;&#160;&#160;&#x25C9;&#160;", Re.RegexOptions.IgnoreCase | Re.RegexOptions.Multiline),
       new ReplacePattern(@"^(\s*)(\*){3}(\s+)", "&#160;&#160;&#160;&#160;&#160;&#x25C9;&#160;", Re.RegexOptions.IgnoreCase | Re.RegexOptions.Multiline),
       new ReplacePattern(@"^(\s*)(\*){4}(\s+)", "&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#x25C9;&#160;", Re.RegexOptions.IgnoreCase | Re.RegexOptions.Multiline),
       new ReplacePattern(@"^(\s*)(\*){5}(\s+)", "&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#x25C9;&#160;", Re.RegexOptions.IgnoreCase | Re.RegexOptions.Multiline),
       new ReplacePattern(@"^(\s*)(\*){6}(\s+)", "&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#x25C9;&#160;", Re.RegexOptions.IgnoreCase | Re.RegexOptions.Multiline),
-      new ReplacePattern(@"^---$", "<hr />", Re.RegexOptions.Multiline),
-      new ReplacePattern(@"\n", "<br />"),
+      new ReplacePattern(@"^(\s*)([-]{3,})(\s*)$", "<hr />", Re.RegexOptions.Multiline)
     };
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    [Newtonsoft.Json.JsonProperty("CustomStylePatterns")]
+    private List<ReplacePattern> _CustomStylePatterns = new List<ReplacePattern>();
     /// <summary>
     /// Contains all Replacement Patterns for your custom Style.
     /// </summary>
@@ -111,7 +122,23 @@ namespace Notes {
         return MySelf._CustomStylePatterns;
       }
       set {
-        MySelf._CustomStylePatterns = value;
+        //MySelf._CustomStylePatterns = value;
+      }
+    }
+
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    [Newtonsoft.Json.JsonProperty("GlobalStylePatterns")]
+    private List<ReplacePattern> _GlobalStylePatterns = new List<ReplacePattern>();
+    /// <summary>
+    /// Contains all Replacement Patterns for your custom Style.
+    /// </summary>
+    public static List<ReplacePattern> GlobalStylePatterns {
+      get {
+        return MySelf._GlobalStylePatterns;
+      }
+      set {
+        MySelf._GlobalStylePatterns = value;
       }
     }
     #endregion

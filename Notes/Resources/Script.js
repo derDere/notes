@@ -59,6 +59,7 @@ function LinkControl(event) {
 for (let a of document.getElementsByTagName("a")) {
     let url = a.href.replace("about:blank", '');
     if (url[0] != "#") {
+        a.classList.add("external");
         a.addEventListener("click", LinkControl);
     }
 }
