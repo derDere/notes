@@ -33,16 +33,16 @@ namespace Notes {
                                                         UseEmojiAndSmiley().
                                                         Build();
 
-    public static string RenderNote(NoteConfig noteConfig) {
+    public static string RenderNote(NoteConfig noteConfig, Media.Color BgColor) {
       switch (noteConfig.DisplayType) {
         case DisplayTypes.Org:
-          return RenderOrgMode(noteConfig.Content);
+          return RenderOrgMode(noteConfig.Content, BgColor);
         case DisplayTypes.MarkDown:
-          return RenderMarkDown(noteConfig.Content);
+          return RenderMarkDown(noteConfig.Content, BgColor);
         case DisplayTypes.Custom:
-          return RenderCustom(noteConfig.Content);
+          return RenderCustom(noteConfig.Content, BgColor);
         default:
-          return RenderPlainText(noteConfig.Content);
+          return RenderPlainText(noteConfig.Content, BgColor);
       }
     }
 
@@ -53,9 +53,8 @@ namespace Notes {
       return s;
     }
 
-    public static string WrapIntoHtml(string html) {
+    public static string WrapIntoHtml(string html, Media.Color BgColor) {
       Media.Color FgColor = (Media.Color)(Application.Current.FindResource("FgColor"));
-      Media.Color BgColor = (Media.Color)(Application.Current.FindResource("BgColor"));
       Media.Color LkColor = (Media.Color)(Application.Current.FindResource("LkColor"));
       List<string> lines = new List<string>() {
         "<!DOCTYPE html>",
@@ -83,7 +82,7 @@ namespace Notes {
       return string.Join("\n", lines.ToArray());
     }
 
-    public static string RenderPlainText(string content) {
+    public static string RenderPlainText(string content, Media.Color BgColor) {
       return WrapIntoHtml(
         ReplaceData(content).
           Replace("&", "&#38;").
@@ -94,7 +93,8 @@ namespace Notes {
           Replace("\r\n", "<br />").
           Replace("\r", "<br />").
           Replace("\n", "<br />").
-          Replace("\"", "&#34;")
+          Replace("\"", "&#34;"),
+        BgColor
       );
     }
 
@@ -183,23 +183,23 @@ namespace Notes {
       return content;
     }
 
-    public static string RenderMarkDown(string content) {
+    public static string RenderMarkDown(string content, Media.Color BgColor) {
       string html = Markdown.ToHtml(ReplaceData(content), pipeline);
       html = dateTimePattern.Replace(html, ReplaceDateTime);
-      return WrapIntoHtml(html);
+      return WrapIntoHtml(html, BgColor);
     }
 
-    public static string RenderOrgMode(string content) {
+    public static string RenderOrgMode(string content, Media.Color BgColor) {
       MessageBox.Show("Org Mode is not jet implemented!", "NOPE", MessageBoxButton.OK, MessageBoxImage.Stop);
       return ReplaceData(content);
     }
 
-    public static string RenderCustom(string content) {
+    public static string RenderCustom(string content, Media.Color BgColor) {
       content = ReplaceData(content);
       foreach(ReplacePattern rp in Config.CustomStylePatterns) {
         content = rp.Replace(content);
       }
-      return WrapIntoHtml(content);
+      return WrapIntoHtml(content, BgColor);
     }
   }
 }

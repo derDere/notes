@@ -11,5 +11,17 @@ namespace Notes {
   /// Interaktionslogik für "App.xaml"
   /// </summary>
   public partial class App : Application {
+
+    public class ExceptionMessage {
+      public string Message { get; private set; }
+      public Exception Ex { get; private set; }
+      public ExceptionMessage(string message, Exception ex) {
+        this.Message = message;
+        this.Ex = ex;
+      }
+    }
+
+    public static readonly ManagedList<ExceptionMessage> OccuredExceptions = new ManagedList<ExceptionMessage>();
+
   }
 }

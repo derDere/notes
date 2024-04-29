@@ -46,7 +46,7 @@ namespace Notes {
         ConfigSaved?.Invoke(new EventArgs());
       }
       catch (Exception ex) {
-        MessageBox.Show(ex.Message, "Error saving Config!", MessageBoxButton.OK, MessageBoxImage.Error);
+        App.OccuredExceptions.Add(new App.ExceptionMessage("Error saving Config!", ex));
       }
     }
 
@@ -62,7 +62,7 @@ namespace Notes {
           ConfigReloaded?.Invoke(new EventArgs());
         }
         catch (Exception ex) {
-          MessageBox.Show(ex.Message, "Error loading Config!", MessageBoxButton.OK, MessageBoxImage.Error);
+          App.OccuredExceptions.Add(new App.ExceptionMessage("Error loading Config!", ex));
         }
       }
     }

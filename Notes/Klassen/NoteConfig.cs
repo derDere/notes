@@ -19,6 +19,15 @@ namespace Notes {
     Custom = 3
   }
 
+  public enum DisplayColors {
+    Yellow,
+    Orange,
+    Red,
+    Pink,
+    Blue,
+    Green
+  }
+
   public class NoteConfig {
 
     public const int DEFAULT_MARGIN = 20;
@@ -34,10 +43,24 @@ namespace Notes {
     public int Left { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
-    public string Content { get; set; }
     public bool Visible { get; set; }
     public string File { get; set; }
+    public DisplayColors Color { get; set; }
     public DisplayTypes DisplayType { get; set; }
+
+    private string _Content = "";
+    public string Content {
+      get {
+        return _Content;
+      }
+      set {
+        bool changed = _Content != value;
+        _Content = value;
+        if (changed) {
+          ContentChanged = true;
+        }
+      }
+    }
     #endregion
 
     #region WpfProperties
@@ -82,6 +105,9 @@ namespace Notes {
       set {
       }
     }
+
+    [Newtonsoft.Json.JsonIgnore()]
+    public bool ContentChanged { get; private set; } = false;
     #endregion
 
     #region Construction
@@ -96,6 +122,7 @@ namespace Notes {
       Visible = true;
       File = string.Empty;
       DisplayType = DisplayTypes.Plain;
+      Color = DisplayColors.Yellow;
     }
 
     public NoteConfig(int top, int left, int width, int height, string content, bool visible, string file, DisplayTypes displayType) {
@@ -117,19 +144,24 @@ namespace Notes {
       if (string.IsNullOrEmpty(File)) { return false; }
       if (string.IsNullOrWhiteSpace(File)) { return false; }
       if (!IO.File.Exists(File)) {
-        IO.File.WriteAllText(File, Content, Encoding.UTF8);
+        try {
+          IO.File.WriteAllText(File, Content, Encoding.UTF8);
+        }
+        catch (Exception ex) {
+          App.OccuredExceptions.Add(new App.ExceptionMessage("Error creating mapped file!", ex));
+        }
       }
       return true;
     }
 
     public bool HasFileChanged() {
-      if (!IsFileMapped()) { return false;}
+      if (!IsFileMapped()) { return false; }
       string fileContent = "\b\0\0\b\t";
       try {
         fileContent = IO.File.ReadAllText(File, Encoding.UTF8);
       }
       catch (Exception ex) {
-        MessageBox.Show(ex.Message, "Error reading File!", MessageBoxButton.OK, MessageBoxImage.Error);
+        App.OccuredExceptions.Add(new App.ExceptionMessage("Error reading File!", ex));
       }
       return fileContent != Content;
     }
@@ -140,17 +172,20 @@ namespace Notes {
         IO.File.WriteAllText(File, Content, Encoding.UTF8);
       }
       catch (Exception ex) {
-        MessageBox.Show(ex.Message, "Error creating File!", MessageBoxButton.OK, MessageBoxImage.Error);
+        App.OccuredExceptions.Add(new App.ExceptionMessage("Error creating File!", ex));
       }
     }
 
     public void SaveToFile() {
       if (IsFileMapped()) {
-        try {
-          IO.File.WriteAllText(File, Content, Encoding.UTF8);
-        }
-        catch (Exception ex) {
-          MessageBox.Show(ex.Message, "Error saving File!", MessageBoxButton.OK, MessageBoxImage.Error);
+        if (ContentChanged) {
+          try {
+            IO.File.WriteAllText(File, Content, Encoding.UTF8);
+            ContentChanged = false;
+          }
+          catch (Exception ex) {
+            App.OccuredExceptions.Add(new App.ExceptionMessage("Error saving File!", ex));
+          }
         }
       }
     }
@@ -161,7 +196,7 @@ namespace Notes {
           Content = IO.File.ReadAllText(File, Encoding.UTF8);
         }
         catch (Exception ex) {
-          MessageBox.Show(ex.Message, "Error loading File!", MessageBoxButton.OK, MessageBoxImage.Error);
+          App.OccuredExceptions.Add(new App.ExceptionMessage("Error loading File!", ex));
         }
       }
     }
@@ -196,8 +231,8 @@ namespace Notes {
       }
     }
 
-    public string GetContent() {
-      return NoteRenderer.RenderNote(this);
+    public string GetContent(System.Windows.Media.Color BgColor) {
+      return NoteRenderer.RenderNote(this, BgColor);
     }
     #endregion
   }

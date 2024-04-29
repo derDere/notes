@@ -55,10 +55,48 @@ namespace Notes {
 
     public NoteConfig NoteConfig { get; set; }
 
+    private SolidColorBrush BgBru = null;
+    private SolidColorBrush TitleBgBru = null;
+
     public NoteWindow(NoteConfig noteConfig) {
       this.NoteConfig = noteConfig;
 
+      string colorSuffix = "Y";
+      switch (noteConfig.Color) {
+        case DisplayColors.Orange:
+          colorSuffix = "O";
+          break;
+        case DisplayColors.Red:
+          colorSuffix = "R";
+          break;
+        case DisplayColors.Pink:
+          colorSuffix = "P";
+          break;
+        case DisplayColors.Blue:
+          colorSuffix = "B";
+          break;
+        case DisplayColors.Green:
+          colorSuffix = "F";
+          break;
+      }
+
+      BgBru = new SolidColorBrush((Color)App.Current.FindResource("BgColor" + colorSuffix));
+      TitleBgBru = new SolidColorBrush((Color)App.Current.FindResource("TitleBgColor" + colorSuffix));
+
+      this.Resources.Add("BgBru", BgBru);
+      this.Resources.Add("TitleBgBru", TitleBgBru);
+
       InitializeComponent();
+
+      foreach (MenuItem mi in ColorMi.Items) {
+        DisplayColors color = (DisplayColors)mi.Tag;
+        if (color == noteConfig.Color) {
+          mi.IsChecked = true;
+          ColorMi.Icon = mi.Icon;
+        } else {
+          mi.IsChecked = false;
+        }
+      }
 
       WebCon.EnsureCoreWebView2Async();
 
@@ -92,12 +130,23 @@ namespace Notes {
     private void FileChangedTimer_Tick(object sender, EventArgs e) {
       if (!loaded)
         return;
+      if (syncFileWhatcher?.Path == ".") {
+        try {
+          IO.FileInfo fi = new IO.FileInfo(NoteConfig.File);
+          syncFileWhatcher.Path = fi.Directory.FullName;
+        }
+        catch (Exception ex) {
+          if (Debugger.IsAttached) {
+            //throw ex;
+          }
+        }
+      }
       if (FileChanged) {
         FileChanged = false;
         if (ContentTxb.IsReadOnly && NoteConfig.HasFileChanged()) {
           NoteConfig.LoadFromFile();
           ContentTxb.Text = NoteConfig.Content;
-          WebCon.NavigateToString(NoteConfig.GetContent());
+          WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
         }
       }
     }
@@ -106,7 +155,13 @@ namespace Notes {
       if (NoteConfig.IsFileMapped()) {
         IO.FileInfo fi = new IO.FileInfo(NoteConfig.File);
         if (syncFileWhatcher == null) {
-          syncFileWhatcher = new IO.FileSystemWatcher(fi.Directory.FullName, fi.Name);
+          syncFileWhatcher = new IO.FileSystemWatcher(".", fi.Name);
+          try {
+            syncFileWhatcher.Path = fi.Directory.FullName;
+          }
+          catch (Exception ex) {
+            App.OccuredExceptions.Add(new App.ExceptionMessage("Error while setting up FileSystemWatcher!", ex));
+          }
           syncFileWhatcher.Changed += SyncFileWhatcher_Changed;
           syncFileWhatcher.EnableRaisingEvents = true;
         }
@@ -131,7 +186,7 @@ namespace Notes {
     }
 
     private void WebCon_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e) {
-      string html = NoteConfig.GetContent();
+      string html = NoteConfig.GetContent(BgBru.Color);
       //WebCon.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
       WebCon.CoreWebView2.Settings.IsZoomControlEnabled = true;
       WebCon.CoreWebView2.ContextMenuRequested += WebCon_CoreWebView2_ContextMenuRequested;
@@ -162,7 +217,7 @@ namespace Notes {
         ContentTxb.IsReadOnly = true;
         ContentTxb.Cursor = Cursors.Arrow;
         PenImg.Visibility = Visibility.Collapsed;
-        WebCon.NavigateToString(NoteConfig.GetContent());
+        WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
 
         ReadOnlyTimer.Stop();
       }
@@ -264,7 +319,7 @@ namespace Notes {
         }
       }
       catch (Exception ex) {
-        MessageBox.Show(ex.Message, "Error Calling Link!", MessageBoxButton.OK, MessageBoxImage.Error);
+        App.OccuredExceptions.Add(new App.ExceptionMessage("Error Calling Link!", ex));
       }
     }
 
@@ -349,7 +404,7 @@ namespace Notes {
 
       ContentTxb.Text = text;
 
-      WebCon.NavigateToString(NoteConfig.GetContent());
+      WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
     }
 
     private void PenImg_MouseDown(object sender, MouseButtonEventArgs e) {
@@ -444,7 +499,7 @@ namespace Notes {
             NoteConfig.DisplayType = dt;
             Config.Save();
             ContentTypeMi.Icon = mi.Icon;
-            WebCon.NavigateToString(NoteConfig.GetContent());
+            WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
           }
         }
       }
@@ -492,7 +547,55 @@ namespace Notes {
     private void ReloadCmd_Executed(object sender, ExecutedRoutedEventArgs e) {
       if (!loaded)
         return;
-      WebCon.NavigateToString(NoteConfig.GetContent());
+      WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
+    }
+
+    private void ColorMi_Checked(object sender, RoutedEventArgs e) {
+      if (!loaded)
+        return;
+      foreach (MenuItem mi in ColorMi.Items) {
+        if (mi != sender) {
+          if (mi.IsChecked) {
+            mi.Icon = ColorMi.Icon;
+          }
+          mi.IsChecked = false;
+        }
+        else {
+          DisplayColors col = (DisplayColors)mi.Tag;
+          if (NoteConfig.Color != col) {
+            NoteConfig.Color = col;
+            Config.Save();
+            ColorMi.Icon = mi.Icon;
+            Color color = (Color)App.Current.FindResource("BgColorY");
+            Color titleColor = (Color)App.Current.FindResource("TitleBgColorY");
+            switch (NoteConfig.Color) {
+              case DisplayColors.Orange:
+                color = (Color)App.Current.FindResource("BgColorO");
+                titleColor = (Color)App.Current.FindResource("TitleBgColorO");
+                break;
+              case DisplayColors.Red:
+                color = (Color)App.Current.FindResource("BgColorR");
+                titleColor = (Color)App.Current.FindResource("TitleBgColorR");
+                break;
+              case DisplayColors.Pink:
+                color = (Color)App.Current.FindResource("BgColorP");
+                titleColor = (Color)App.Current.FindResource("TitleBgColorP");
+                break;
+              case DisplayColors.Blue:
+                color = (Color)App.Current.FindResource("BgColorB");
+                titleColor = (Color)App.Current.FindResource("TitleBgColorB");
+                break;
+              case DisplayColors.Green:
+                color = (Color)App.Current.FindResource("BgColorG");
+                titleColor = (Color)App.Current.FindResource("TitleBgColorG");
+                break;
+            }
+            BgBru.Color = color;
+            TitleBgBru.Color = titleColor;
+            WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
+          }
+        }
+      }
     }
   }
 }

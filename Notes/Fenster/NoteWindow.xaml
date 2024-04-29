@@ -33,6 +33,38 @@
                 <MenuItem Tag="{x:Static local:DisplayTypes.Org}" Icon="{StaticResource OrgIco}" Header="Org Code" IsEnabled="False"/>
                 <MenuItem Tag="{x:Static local:DisplayTypes.Custom}" Icon="{StaticResource CustomIco}" Header="Custom" IsCheckable="True" Checked="ContentTypeMi_Checked"/>
             </MenuItem>
+            <MenuItem Name="ColorMi" Header="Note Color">
+                <MenuItem Tag="{x:Static local:DisplayColors.Yellow}" Header="Yellow" Checked="ColorMi_Checked" IsCheckable="True">
+                    <MenuItem.Icon>
+                        <Rectangle Width="16" Height="16" Fill="{StaticResource BgBruY}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Tag="{x:Static local:DisplayColors.Orange}" Header="Orange" Checked="ColorMi_Checked" IsCheckable="True">
+                    <MenuItem.Icon>
+                        <Rectangle Width="16" Height="16" Fill="{StaticResource BgBruO}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Tag="{x:Static local:DisplayColors.Red}" Header="Red" Checked="ColorMi_Checked" IsCheckable="True">
+                    <MenuItem.Icon>
+                        <Rectangle Width="16" Height="16" Fill="{StaticResource BgBruR}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Tag="{x:Static local:DisplayColors.Pink}" Header="Pink" Checked="ColorMi_Checked" IsCheckable="True">
+                    <MenuItem.Icon>
+                        <Rectangle Width="16" Height="16" Fill="{StaticResource BgBruP}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Tag="{x:Static local:DisplayColors.Blue}" Header="Blue" Checked="ColorMi_Checked" IsCheckable="True">
+                    <MenuItem.Icon>
+                        <Rectangle Width="16" Height="16" Fill="{StaticResource BgBruB}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Tag="{x:Static local:DisplayColors.Green}" Header="Green" Click="ColorMi_Checked" IsCheckable="True">
+                    <MenuItem.Icon>
+                        <Rectangle Width="16" Height="16" Fill="{StaticResource BgBruG}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
             <MenuItem Command="Print" Icon="{StaticResource PrintIco}"/>
             <MenuItem Header="Sync to Document" Command="local:CustomCommands.SyncToDocument" Icon="{StaticResource SaveToDocIco}"/>
             <MenuItem x:Name="StopSyncMi" Header="Stop Sync" Command="local:CustomCommands.StopSyncToDocument"/>
@@ -53,7 +85,7 @@
     </Window.ContextMenu>
     <Grid Margin="20" Background="{StaticResource BgBru}">
         <Grid.Effect>
-            <DropShadowEffect ShadowDepth="0" BlurRadius="8" Opacity=".5"/>
+            <DropShadowEffect ShadowDepth="0" BlurRadius="12" Opacity=".8"/>
         </Grid.Effect>
 
         <TextBox x:Name="ContentTxb" Width="200" Height="200"

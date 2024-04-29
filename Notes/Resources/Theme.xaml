@@ -1,15 +1,60 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="BgColor">#FFFFF2AB</Color>
     <Color x:Key="BgColorTransparent">#00FFF2AB</Color>
     <Color x:Key="FgColor">#F308</Color>
     <Color x:Key="LkColor">#F05B</Color>
-    <Color x:Key="TitleBgColor">#FFFFEB81</Color>
+
+    <!-- White -->
+    <Color x:Key="TitleBgColor">#FFEBEBEB</Color>
+    <Color x:Key="BgColor">#FFFFFFFF</Color>
+
+    <!-- YELLOW -->
+    <Color x:Key="TitleBgColorY">#FFFFEB81</Color>
+    <Color x:Key="BgColorY">#FFFFF2AB</Color>
+
+    <!-- Orange -->
+    <Color x:Key="TitleBgColorO">#FFFFBF81</Color>
+    <Color x:Key="BgColorO">#FFFFD5AB</Color>
+
+    <!-- Red -->
+    <Color x:Key="TitleBgColorR">#FFFF9381</Color>
+    <Color x:Key="BgColorR">#FFFFB8AB</Color>
+
+    <!-- Pink -->
+    <Color x:Key="TitleBgColorP">#FFFF81E2</Color>
+    <Color x:Key="BgColorP">#FFFFABEB</Color>
+
+    <!-- Green -->
+    <Color x:Key="TitleBgColorG">#FF94FF81</Color>
+    <Color x:Key="BgColorG">#FFB7FFAB</Color>
+
+    <!-- Blue -->
+    <Color x:Key="TitleBgColorB">#FF8196FF</Color>
+    <Color x:Key="BgColorB">#FFACB9FF</Color>
+
+    <SolidColorBrush x:Key="FgBru" Color="{StaticResource FgColor}"/>
 
     <SolidColorBrush x:Key="BgBru" Color="{StaticResource BgColor}"/>
-    <SolidColorBrush x:Key="FgBru" Color="{StaticResource FgColor}"/>
     <SolidColorBrush x:Key="TitleBgBru" Color="{StaticResource TitleBgColor}"/>
+
+    <SolidColorBrush x:Key="BgBruY" Color="{StaticResource BgColorY}"/>
+    <SolidColorBrush x:Key="TitleBgBruY" Color="{StaticResource TitleBgColorY}"/>
+
+    <SolidColorBrush x:Key="BgBruO" Color="{StaticResource BgColorO}"/>
+    <SolidColorBrush x:Key="TitleBgBruO" Color="{StaticResource TitleBgColorO}"/>
+
+    <SolidColorBrush x:Key="BgBruR" Color="{StaticResource BgColorR}"/>
+    <SolidColorBrush x:Key="TitleBgBruR" Color="{StaticResource TitleBgColorR}"/>
+
+    <SolidColorBrush x:Key="BgBruP" Color="{StaticResource BgColorP}"/>
+    <SolidColorBrush x:Key="TitleBgBruP" Color="{StaticResource TitleBgColorP}"/>
+
+    <SolidColorBrush x:Key="BgBruB" Color="{StaticResource BgColorB}"/>
+    <SolidColorBrush x:Key="TitleBgBruB" Color="{StaticResource TitleBgColorB}"/>
+
+    <SolidColorBrush x:Key="BgBruG" Color="{StaticResource BgColorG}"/>
+    <SolidColorBrush x:Key="TitleBgBruG" Color="{StaticResource TitleBgColorG}"/>
 
     <Viewbox x:Key="SelectAllIco" x:Shared="false">
         <Image Source="/Resources/selection_select.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />

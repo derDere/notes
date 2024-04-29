@@ -19,7 +19,7 @@
             <Setter Property="Width" Value="16"/>
         </Style>
     </UserControl.Resources>
-    <Grid Background="{StaticResource BgBru}">
+    <Grid Background="{StaticResource BgBruY}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
@@ -46,7 +46,7 @@
             <Rectangle.Fill>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                     <GradientStop Color="{StaticResource BgColorTransparent}"/>
-                    <GradientStop Color="{StaticResource BgColor}" Offset="0.7"/>
+                    <GradientStop Color="{StaticResource BgColorY}" Offset="0.7"/>
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
