@@ -257,6 +257,7 @@
   <ItemGroup>
     <Resource Include="Resources\sticky_note__plus.png" />
     <Resource Include="Resources\arrow_circle_double_135.png" />
+    <Resource Include="Resources\check.png" />
     <Content Include="Resources\Script.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

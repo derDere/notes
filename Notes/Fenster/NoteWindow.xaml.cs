@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -76,7 +77,7 @@ namespace Notes {
           colorSuffix = "B";
           break;
         case DisplayColors.Green:
-          colorSuffix = "F";
+          colorSuffix = "G";
           break;
       }
 
@@ -196,10 +197,10 @@ namespace Notes {
     private void WebCon_CoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs e) {
       WebConContextMenuDef = e.GetDeferral();
       currentConMenEvent = e;
-      string cmds = "";
-      foreach (var mi in e.MenuItems) {
-        cmds += mi.Name + " " + mi.Label + " " + mi.CommandId + "\n";
-      }
+      //string cmds = "";
+      //foreach (var mi in e.MenuItems) {
+      //  cmds += mi.Name + " " + mi.Label + " " + mi.CommandId + "\n";
+      //}
       e.Handled = true;
       this.ContextMenu.IsOpen = true;
     }
@@ -323,6 +324,15 @@ namespace Notes {
       }
     }
 
+    private void SetTaskState(Dictionary<string, object> jj) {
+      string text = (string)jj["text"];
+      bool isChecked = (bool)jj["checked"];
+      string id = (string)jj["id"];
+      string pattern = @"\[[ Xx]\]" + Regex.Escape(text);
+      string newState = (isChecked ? "[X]" : "[ ]") + text;
+      ContentTxb.Text = Regex.Replace(ContentTxb.Text, pattern, newState);
+    }
+
     private void WebCon_MessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
       Dictionary<string, object> jj = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(e.WebMessageAsJson);
       switch (jj["cmd"]) {
@@ -336,6 +346,9 @@ namespace Notes {
           if (ContentTxb.IsReadOnly) {
             SetEditMode(true);
           }
+          break;
+        case "taskUpdate":
+          SetTaskState(jj);
           break;
       }
     }
