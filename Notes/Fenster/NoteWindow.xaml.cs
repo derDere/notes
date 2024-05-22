@@ -1,25 +1,16 @@
-﻿using ColorCode.Compilation.Languages;
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.WinForms;
+﻿using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using static System.Net.Mime.MediaTypeNames;
 using Forms = System.Windows.Forms;
 using IO = System.IO;
 
@@ -88,13 +79,15 @@ namespace Notes {
       this.Resources.Add("TitleBgBru", TitleBgBru);
 
       InitializeComponent();
+      this.Title = NoteConfig.DisplayName;
 
       foreach (MenuItem mi in ColorMi.Items) {
         DisplayColors color = (DisplayColors)mi.Tag;
         if (color == noteConfig.Color) {
           mi.IsChecked = true;
           ColorMi.Icon = mi.Icon;
-        } else {
+        }
+        else {
           mi.IsChecked = false;
         }
       }
@@ -109,6 +102,7 @@ namespace Notes {
 
       StopSyncMi.Visibility = NoteConfig.IsFileMapped() ? Visibility.Visible : Visibility.Collapsed;
       UpdateOrCreateSyncFileWhatcher();
+      UpdateSyncBindingTargets();
 
       foreach (MenuItem mi in ContentTypeMi.Items) {
         DisplayTypes dt = (DisplayTypes)mi.Tag;
@@ -219,6 +213,7 @@ namespace Notes {
         ContentTxb.Cursor = Cursors.Arrow;
         PenImg.Visibility = Visibility.Collapsed;
         WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
+        this.Title = NoteConfig.DisplayName;
 
         ReadOnlyTimer.Stop();
       }
@@ -506,12 +501,28 @@ namespace Notes {
         if (mi != sender) {
           mi.IsChecked = false;
         }
-        else {
-          DisplayTypes dt = (DisplayTypes)mi.Tag;
-          if (NoteConfig.DisplayType != dt) {
-            NoteConfig.DisplayType = dt;
+      }
+      MenuItem mis = sender as MenuItem;
+      if (mis != null) {
+        DisplayTypes? dt = mis.Tag as DisplayTypes?;
+        if (dt.HasValue) {
+          if (NoteConfig.DisplayType != dt.Value) {
+            NoteConfig.DisplayType = dt.Value;
             Config.Save();
-            ContentTypeMi.Icon = mi.Icon;
+            switch (dt.Value) {
+              case DisplayTypes.Plain:
+                ContentTypeMi.Icon = FindResource("PlainTextIco");
+                break;
+              case DisplayTypes.Org:
+                ContentTypeMi.Icon = FindResource("OrgIco");
+                break;
+              case DisplayTypes.MarkDown:
+                ContentTypeMi.Icon = FindResource("MarkDownIco");
+                break;
+              case DisplayTypes.Custom:
+                ContentTypeMi.Icon = FindResource("CustomIco");
+                break;
+            }
             WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
           }
         }
@@ -550,11 +561,18 @@ namespace Notes {
       }
     }
 
+    public void UpdateSyncBindingTargets() {
+      FileOkImg.GetBindingExpression(Image.VisibilityProperty).UpdateTarget();
+      FileFailedImg.GetBindingExpression(Image.VisibilityProperty).UpdateTarget();
+      FileActiveImg.GetBindingExpression(Image.VisibilityProperty).UpdateTarget();
+    }
+
     private void StopSyncCmd_Executed(object sender, ExecutedRoutedEventArgs e) {
       NoteConfig.File = null;
       Config.Save();
       StopSyncMi.Visibility = NoteConfig.IsFileMapped() ? Visibility.Visible : Visibility.Collapsed;
       UpdateOrCreateSyncFileWhatcher();
+      UpdateSyncBindingTargets();
     }
 
     private void ReloadCmd_Executed(object sender, ExecutedRoutedEventArgs e) {
@@ -568,17 +586,16 @@ namespace Notes {
         return;
       foreach (MenuItem mi in ColorMi.Items) {
         if (mi != sender) {
-          if (mi.IsChecked) {
-            mi.Icon = ColorMi.Icon;
-          }
           mi.IsChecked = false;
         }
-        else {
-          DisplayColors col = (DisplayColors)mi.Tag;
-          if (NoteConfig.Color != col) {
-            NoteConfig.Color = col;
+      }
+      MenuItem mis = sender as MenuItem;
+      if (mis != null) {
+        DisplayColors? col = mis.Tag as DisplayColors?;
+        if (col.HasValue) {
+          if (NoteConfig.Color != col.Value) {
+            NoteConfig.Color = col.Value;
             Config.Save();
-            ColorMi.Icon = mi.Icon;
             Color color = (Color)App.Current.FindResource("BgColorY");
             Color titleColor = (Color)App.Current.FindResource("TitleBgColorY");
             switch (NoteConfig.Color) {
@@ -605,10 +622,15 @@ namespace Notes {
             }
             BgBru.Color = color;
             TitleBgBru.Color = titleColor;
+            ((Rectangle)ColorMi.Icon).Fill = new SolidColorBrush(color);
             WebCon.NavigateToString(NoteConfig.GetContent(BgBru.Color));
           }
         }
       }
+    }
+
+    private void FileFailedImg_MouseDown(object sender, MouseButtonEventArgs e) {
+      NoteConfig.SaveToFile(true);
     }
   }
 }

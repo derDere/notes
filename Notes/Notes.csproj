@@ -255,9 +255,12 @@
     <Resource Include="Resources\document_sticky_note.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\tick_small.png" />
     <Resource Include="Resources\sticky_note__plus.png" />
     <Resource Include="Resources\arrow_circle_double_135.png" />
     <Resource Include="Resources\check.png" />
+    <Resource Include="Resources\document__arrow.png" />
+    <Resource Include="Resources\document__exclamation.png" />
     <Content Include="Resources\Script.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

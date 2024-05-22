@@ -10,6 +10,10 @@ using Drawing = System.Drawing;
 using System.Windows;
 using System.Windows.Media.Animation;
 using IO = System.IO;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows.Controls;
+using System.Text.RegularExpressions;
 
 namespace Notes {
   public enum DisplayTypes {
@@ -37,6 +41,8 @@ namespace Notes {
     public const int DEFAULT_HEIGHT = 200;
 
     private NoteWindow myWindow = null;
+    private bool LastSynkOk = false;
+    private bool IsSyncing = false;
 
     #region JsonProperties
     public int Top { get; set; }
@@ -83,6 +89,7 @@ namespace Notes {
         if (addDots) {
           result += "...";
         }
+        result = Regex.Replace(result, @"^[\s#]*", "");
         return result;
       }
       set { }
@@ -104,6 +111,40 @@ namespace Notes {
       }
       set {
       }
+    }
+
+    [Newtonsoft.Json.JsonIgnore()]
+    public Visibility SyncOnAndOk {
+      get {
+        if (IsSyncing)
+          return Visibility.Collapsed;
+        if (IsFileMapped())
+          return LastSynkOk ? Visibility.Visible : Visibility.Collapsed;
+        return Visibility.Collapsed;
+      }
+      set { }
+    }
+
+    [Newtonsoft.Json.JsonIgnore()]
+    public Visibility SyncOnButFailed {
+      get {
+        if (IsSyncing)
+          return Visibility.Collapsed;
+        if (IsFileMapped())
+          return LastSynkOk ? Visibility.Collapsed : Visibility.Visible;
+        return Visibility.Collapsed;
+      }
+      set { }
+    }
+
+    [Newtonsoft.Json.JsonIgnore()]
+    public Visibility SyncOnAndSyncing {
+      get {
+        if (IsFileMapped())
+          return IsSyncing ? Visibility.Visible : Visibility.Collapsed;
+        return Visibility.Collapsed;
+      }
+      set { }
     }
 
     [Newtonsoft.Json.JsonIgnore()]
@@ -176,18 +217,59 @@ namespace Notes {
       }
     }
 
-    public void SaveToFile() {
+    public void SaveToFile(bool ignoreContentCheck = false) {
       if (IsFileMapped()) {
-        if (ContentChanged) {
-          try {
-            IO.File.WriteAllText(File, Content, Encoding.UTF8);
-            ContentChanged = false;
-          }
-          catch (Exception ex) {
-            App.OccuredExceptions.Add(new App.ExceptionMessage("Error saving File!", ex));
-          }
+        if (ContentChanged || ignoreContentCheck) {
+          IsSyncing = true;
+          myWindow?.UpdateSyncBindingTargets();
+          WriteToFileBgw(File, Content, Encoding.UTF8, success => {
+            IsSyncing = false;
+            LastSynkOk = success;
+            myWindow?.UpdateSyncBindingTargets();
+          });
+          ContentChanged = false;
         }
       }
+    }
+
+    private struct WriteToFileBgwArgs {
+      public string file;
+      public string content;
+      public Encoding encoding;
+    }
+
+    private void WriteToFileBgw(string file, string content, Encoding encoding, Action<bool> Callback) {
+      BackgroundWorker bgw = new BackgroundWorker();
+      bgw.DoWork += (b, e) => {
+        Thread.Sleep(1);
+        WriteToFileBgwArgs? a = e.Argument as WriteToFileBgwArgs?;
+        if (a.HasValue) {
+          try {
+            IO.File.WriteAllText(a.Value.file, a.Value.content, a.Value.encoding);
+            e.Result = true;
+          }
+          catch (Exception ex) {
+            e.Result = false;
+            lock(App.OccuredExceptions) {
+              App.OccuredExceptions.Add(new App.ExceptionMessage("Error saving File!", ex));
+            }
+          }
+        } else {
+          e.Result = false;
+        }
+      };
+      bgw.RunWorkerCompleted += (b, e) => {
+        bool? success = e.Result as bool?;
+        bool s = false;
+        if (success.HasValue) s = success.Value;
+        Callback(s);
+      };
+      WriteToFileBgwArgs args = new WriteToFileBgwArgs() {
+        file = file,
+        content = content,
+        encoding = encoding
+      };
+      bgw.RunWorkerAsync(args);
     }
 
     public void LoadFromFile() {
