@@ -97,7 +97,7 @@
                  BorderThickness="0" Margin="10 15 10 10" Padding="0"
                  ContextMenu="{Binding ElementName=Win, Path=ContextMenu}"
                  Background="{StaticResource BgBru}" Foreground="{StaticResource FgBru}"
-                 FontFamily="DejaVuSansMono Nerd Font" FontSize="12"
+                 FontFamily="DejaVuSansM Nerd Font Mono" FontSize="12"
                  AcceptsReturn="True" AcceptsTab="True" AutoWordSelection="False"
                  HorizontalScrollBarVisibility="Auto"
                  VerticalScrollBarVisibility="Auto"

@@ -68,39 +68,39 @@ namespace Notes.Properties {
                 return ResourceManager.GetString("Script", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die html, body {
-        ///    margin: 0;
-        ///    padding: 0;
-        ///    border: 0 none;
-        ///    overflow: auto;
-        ///    background: PaleGoldenrod;
-        ///    color: MediumSlateBlue;
-        ///    font-family: DejaVuSansMono Nerd Font;
-        ///    font-size: 12px;
-        ///}
-        ///
-        ///body {
-        ///    margin-left: 1px;
-        ///}
-        ///
-        ///.editor-color {
-        ///    white-space: pre-line;
-        ///    background: rgba(0,0,0,0.1) !important;
-        ///}
-        ///
-        ///hr {
-        ///    border: 0 none;
-        ///    background: MediumSlateBlue;
-        ///    height: 1px;
-        ///    margin: 10px 0;
-        ///}
-        ///
-        ///::-webkit-scrollbar {
-        ///    width: 5px; /* Set the width [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
-        /// </summary>
-        internal static string Style {
+
+    /// <summary>
+    ///   Sucht eine lokalisierte Zeichenfolge, die html, body {
+    ///    margin: 0;
+    ///    padding: 0;
+    ///    border: 0 none;
+    ///    overflow: auto;
+    ///    background: PaleGoldenrod;
+    ///    color: MediumSlateBlue;
+    ///    font-family: DejaVuSansM Nerd Font Mono;
+    ///    font-size: 12px;
+    ///}
+    ///
+    ///body {
+    ///    margin-left: 1px;
+    ///}
+    ///
+    ///.editor-color {
+    ///    white-space: pre-line;
+    ///    background: rgba(0,0,0,0.1) !important;
+    ///}
+    ///
+    ///hr {
+    ///    border: 0 none;
+    ///    background: MediumSlateBlue;
+    ///    height: 1px;
+    ///    margin: 10px 0;
+    ///}
+    ///
+    ///::-webkit-scrollbar {
+    ///    width: 5px; /* Set the width [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+    /// </summary>
+    internal static string Style {
             get {
                 return ResourceManager.GetString("Style", resourceCulture);
             }

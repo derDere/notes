@@ -41,7 +41,7 @@
 
         <Button x:Name="DeleteBtn" Click="DeleteBtn_Click" ToolTip="Delete Note" Content="{StaticResource TrashIco}" Grid.Column="3" Margin="3 3 19 3"/>
 
-        <ContentControl x:Name="ContentCC" MouseDown="ContentCC_MouseDown" Background="Transparent" FontFamily="DejaVuSansMono Nerd Font" Foreground="{StaticResource FgBru}" Content="{Binding DisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="2" Margin="11 0 1 0"/>
+        <ContentControl x:Name="ContentCC" MouseDown="ContentCC_MouseDown" Background="Transparent" FontFamily="DejaVuSansM Nerd Font Mono" Foreground="{StaticResource FgBru}" Content="{Binding DisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="2" Margin="11 0 1 0"/>
         <Rectangle Grid.Column="2" HorizontalAlignment="Right" Width="11" Margin="0 0 1 0">
             <Rectangle.Fill>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">

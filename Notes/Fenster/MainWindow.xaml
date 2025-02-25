@@ -24,7 +24,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <Button Click="NewNoteTBtn_Click" Padding="0 5" Foreground="{StaticResource FgBru}" Background="{StaticResource TitleBgBruY}" BorderThickness="0" FontFamily="DejaVuSansMono Nerd Font"> Add new Note</Button>
+        <Button Click="NewNoteTBtn_Click" Padding="0 5" Foreground="{StaticResource FgBru}" Background="{StaticResource TitleBgBruY}" BorderThickness="0" FontFamily="DejaVuSansM Nerd Font Mono"> Add new Note</Button>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <ItemsControl x:Name="ItemsCon" DataContext="{Binding}" ItemsSource="{Binding}">

@@ -5,7 +5,7 @@ html, body {
     overflow: auto;
     background: PaleGoldenrod;
     color: MediumSlateBlue;
-    font-family: DejaVuSansMono Nerd Font;
+    font-family: DejaVuSansM Nerd Font Mono;
     font-size: 12px;
 }
 
@@ -51,7 +51,7 @@ a {
     }
 
 a.jira::before {
-    content: '\F802   ';
+    content: '\F0303   ';
 }
 
 ul,
